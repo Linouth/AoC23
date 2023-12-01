@@ -13,7 +13,7 @@ parser.add_argument('-f', '--file', help='file with puzzle input, or empty for d
 
 args = parser.parse_args()
 day = args.day or datetime.date.today().day
-file = args.file or f'in/day{day:02}.txt'
+file = args.file or f'in/day{day:0>2}.txt'
 
 
 '''
@@ -33,7 +33,7 @@ if not os.path.isfile(file):
 '''
 
 
-code = importlib.import_module(f'.days.day{day:02}', 'src')
+code = importlib.import_module(f'.days.day{day:0>2}', 'src')
 
 with open(file, 'r') as f:
     data = f.read()
@@ -45,6 +45,6 @@ with open(file, 'r') as f:
 
     if hasattr(code, 'part2'):
         t0 = time.process_time_ns()
-        code.part2(data)
+        ret = code.part2(data)
         el = time.process_time_ns() - t0
         print(f'Part 2: {ret} in {el/1e3} ms')
