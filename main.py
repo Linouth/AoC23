@@ -41,10 +41,10 @@ with open(file, 'r') as f:
     t0 = time.process_time_ns()
     ret = code.part1(data)
     el = time.process_time_ns() - t0
-    print(f'Part 1: {ret} in {el/1e3} ms')
+    print(f'Part 1: {ret} in {el/1e6} ms')
 
     if hasattr(code, 'part2'):
         t0 = time.process_time_ns()
         ret = code.part2(data)
         el = time.process_time_ns() - t0
-        print(f'Part 2: {ret} in {el/1e3} ms')
+        print(f'Part 2: {ret} in {el/1e6} ms')
