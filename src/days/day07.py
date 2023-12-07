@@ -17,6 +17,20 @@ from functools import reduce
 
 # Score gen could be extracted into separate function for both part1 and part2
 
+def gen_score(hand, score_lut, count=None):
+    c = count if count else Counter(hand)
+
+    # format abcde
+    value_sort = sorted(c.values(), reverse=True)
+    M0 = [10**x for x in range(5)][::-1]
+    m0 = sum([ a*b for a,b in zip(value_sort, M0) ])
+
+    # format ffgghhiijj
+    M1 = [100**x for x in range(5)][::-1]
+    m1 = sum([ score_lut[a]*b for a,b in zip(hand, M1) ])
+
+    return m0 * 100**5 + m1
+
 
 def part1(data):
     hands = [(h, int(i)) for h,i in [x.split(' ') for x in data.splitlines()]]
@@ -24,18 +38,7 @@ def part1(data):
     SCORES = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
               'T': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14}
 
-    cmp = []
-    for h in hands:
-        # format abcde
-        value_sort = sorted(Counter(h[0]).values(), reverse=True)
-        M0 = [10**x for x in range(5)][::-1]
-        m0 = sum([ a*b for a,b in zip(value_sort, M0) ])
-
-        # format ffgghhiijj
-        M1 = [100**x for x in range(5)][::-1]
-        m1 = sum([ SCORES[a]*b for a,b in zip(h[0], M1) ])
-
-        cmp.append((m0 * 100**5 + m1, h[0], h[1]))
+    cmp = [ ( gen_score(h[0], SCORES), h[0], h[1] ) for h in hands ]
 
     s = sorted(cmp)
     return reduce(lambda a,b: a + b[0]*b[1][2], enumerate(s, start=1), 0)
@@ -60,16 +63,7 @@ def part2(data):
             mc = max(c.items(), key=lambda x: x[1])
             c[mc[0]] += cj
 
-        # format abcde
-        value_sort = sorted(c.values(), reverse=True)
-        M0 = [10**x for x in range(5)][::-1]
-        m0 = sum([ a*b for a,b in zip(value_sort, M0) ])
-
-        # format ffgghhiijj
-        M1 = [100**x for x in range(5)][::-1]
-        m1 = sum([ SCORES[a]*b for a,b in zip(h[0], M1) ])
-
-        cmp.append((m0 * 100**5 + m1, h[0], h[1]))
+        cmp.append(( gen_score(h[0], SCORES, count=c), h[0], h[1] ))
 
     s = sorted(cmp)
     return reduce(lambda a,b: a + b[0]*b[1][2], enumerate(s, start=1), 0)
