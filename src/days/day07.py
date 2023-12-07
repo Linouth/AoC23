@@ -11,17 +11,18 @@ from functools import reduce
 # Each hand gets a 'score' as follows (each letter represends digits):
 # a b c d e    |    ff gg hh ii jj
 # abcde are sorted character counts multiplied by [10000 1000 100 10 1]
-# respectively
+# respectively (again multiplied by 100**5)
 # ffgghhiijj are the scores of each individual card in the order of the input
+# These are multiplied by 100**[0, 1, 2, 3, 4]
 
 # Score gen could be extracted into separate function for both part1 and part2
 
 
-SCORES1 = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'T':
-           10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14}
-
 def part1(data):
     hands = [(h, int(i)) for h,i in [x.split(' ') for x in data.splitlines()]]
+
+    SCORES = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+              'T': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14}
 
     cmp = []
     for h in hands:
@@ -32,7 +33,7 @@ def part1(data):
 
         # format ffgghhiijj
         M1 = [100**x for x in range(5)][::-1]
-        m1 = sum([ SCORES1[a]*b for a,b in zip(h[0], M1) ])
+        m1 = sum([ SCORES[a]*b for a,b in zip(h[0], M1) ])
 
         cmp.append((m0 * 100**5 + m1, h[0], h[1]))
 
@@ -40,11 +41,11 @@ def part1(data):
     return reduce(lambda a,b: a + b[0]*b[1][2], enumerate(s, start=1), 0)
 
 
-SCORES2 = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'T':
-           10, 'J': 0, 'Q': 12, 'K': 13, 'A': 14}
-
 def part2(data):
     hands = [(h, int(i)) for h,i in [x.split(' ') for x in data.splitlines()]]
+
+    SCORES = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+              'T': 10, 'J': 0, 'Q': 12, 'K': 13, 'A': 14}
 
     cmp = []
     for h in hands:
@@ -66,7 +67,7 @@ def part2(data):
 
         # format ffgghhiijj
         M1 = [100**x for x in range(5)][::-1]
-        m1 = sum([ SCORES2[a]*b for a,b in zip(h[0], M1) ])
+        m1 = sum([ SCORES[a]*b for a,b in zip(h[0], M1) ])
 
         cmp.append((m0 * 100**5 + m1, h[0], h[1]))
 
